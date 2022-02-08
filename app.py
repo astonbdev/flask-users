@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User
-from forms import RegisterUserForm
+from forms import RegisterUserForm, LoginUserForm
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///hashing_login"
@@ -44,3 +44,23 @@ def register_new_user():
 
     else:
         return render_template('register.html', form=form)
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login_user():
+    form = LoginUserForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+
+        user = User.authenticate(username, password)
+        
+        if user:
+           session['username'] = user.username
+           return redirect('/secret')
+
+        else:
+            form.username.errors = ['Bad name/password']
+    
+    return render_template('login.html', form=form)

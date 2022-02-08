@@ -17,11 +17,8 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    id = db.Column(db.Integer,
-                   primary_key=True,
-                   autoincrement=True)
-
     username = db.Column(db.Text,
+                         primary_key=True,
                          nullable=False,
                          unique=True)
 
@@ -53,3 +50,13 @@ class User(db.Model):
         )
 
         return user
+
+    @classmethod
+    def authenticate(cls, username, pwd):
+        user = cls.query.filter_by(username=username).one_or_none()
+
+        if user and bcrypt.check_password_hash(user.password, pwd):
+            return user
+        else:
+            return False
+
