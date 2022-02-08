@@ -14,6 +14,7 @@ def connect_db(app):
 
 
 class User(db.Model):
+    """User class"""
 
     __tablename__ = "users"
 
@@ -37,7 +38,7 @@ class User(db.Model):
 
     @classmethod
     def register(cls, username, pwd, email, first_name, last_name):
-        """registers user, adds to database"""
+        """Creates user instance, hashes password"""
 
         hashed_pwd = bcrypt.generate_password_hash(pwd).decode("utf8")
 
@@ -53,10 +54,11 @@ class User(db.Model):
 
     @classmethod
     def authenticate(cls, username, pwd):
+        """authenticate user"""
+
         user = cls.query.filter_by(username=username).one_or_none()
 
         if user and bcrypt.check_password_hash(user.password, pwd):
             return user
         else:
             return False
-

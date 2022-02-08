@@ -1,10 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextAreaField, BooleanField, PasswordField
-from wtforms.validators import InputRequired, Length, URL, Optional
+from wtforms import StringField, PasswordField
+from wtforms.validators import InputRequired, Length
 
 
 class RegisterUserForm(FlaskForm):
     """Register User Form class"""
+
     username = StringField('User Name',
                            validators=[InputRequired()])
     password = PasswordField('Password',
@@ -16,9 +17,15 @@ class RegisterUserForm(FlaskForm):
     last_name = StringField('Last Name',
                             validators=[InputRequired()])
 
+
 class LoginUserForm(FlaskForm):
     """Login the user"""
+
     username = StringField('User Name',
                            validators=[InputRequired()])
     password = PasswordField('Password',
                              validators=[InputRequired()])
+
+
+class CSRFProtectForm(FlaskForm):
+    """For CSRF protection"""
