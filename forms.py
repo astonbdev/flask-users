@@ -7,15 +7,15 @@ class RegisterUserForm(FlaskForm):
     """Register User Form class"""
 
     username = StringField('User Name',
-                           validators=[InputRequired()])
+                           validators=[InputRequired(), Length(max=20)])
     password = PasswordField('Password',
-                             validators=[InputRequired(), Length(8)])
+                             validators=[InputRequired(), Length(8, 100)])
     email = StringField('Email Address',
-                        validators=[InputRequired()])
+                        validators=[InputRequired(), Length(max=50)])
     first_name = StringField('First Name',
-                             validators=[InputRequired()])
+                             validators=[InputRequired(), Length(max=30)])
     last_name = StringField('Last Name',
-                            validators=[InputRequired()])
+                            validators=[InputRequired(), Length(max=30)])
 
 
 class LoginUserForm(FlaskForm):
