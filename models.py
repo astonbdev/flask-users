@@ -18,12 +18,12 @@ class User(db.Model):
 
     __tablename__ = "users"
 
-    username = db.Column(db.Text,
+    username = db.Column(db.String(20),
                          primary_key=True,
                          nullable=False,
                          unique=True)
 
-    password = db.Column(db.Text,
+    password = db.Column(db.String(100),
                          nullable=False)
 
     email = db.Column(db.String(50),
