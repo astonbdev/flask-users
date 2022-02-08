@@ -36,6 +36,8 @@ class User(db.Model):
     last_name = db.Column(db.String(30),
                           nullable=False)
 
+    
+
     @classmethod
     def register(cls, username, pwd, email, first_name, last_name):
         """Creates user instance, hashes password"""
@@ -62,3 +64,22 @@ class User(db.Model):
             return user
         else:
             return False
+
+
+class Note(db.Model):
+    """Note class"""
+
+    __tablename__ = "notes"
+
+    id = db.Column(db.Integer,
+                   primary_key=True,
+                   autoincrement=True)
+    title = db.Column(db.String(100),
+                      nullable=False)
+    content = db.Column(db.Text,
+                        nullable=False)
+
+    owner = db.Column(db.Text,
+                      db.ForeignKey("users.username"))
+
+    user = db.relationship("User", backref="notes")

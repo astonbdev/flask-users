@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import connect_db, db, User
+from models import connect_db, db, User, Note
 from forms import CSRFProtectForm, RegisterUserForm, LoginUserForm
 
 app = Flask(__name__)

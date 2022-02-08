@@ -6,9 +6,19 @@
 <p>{{ user.first_name }} {{ user.last_name }}</p>
 <p>{{ user.email }}</p>
 
+<h2>Notes</h2>
+    <ul>
+        {% for note in user.notes %}
+        <li maxlength="100">
+            <p><b>{{ note.title }}</b>{{ note.content }}</p> 
+            <button formaction="/notes/{{ note.id }}/update">Update Note</button>
+            <button formaction="/notes/{{ note.id }}/delete" method="POST">Delete Note</button>
+        </li>
+        {% endfor %}
+    </ul>
 
 <form  id="logout-form" action="/logout" method="POST">
-    {{form.hidden_tag()}}
+    {{ form.hidden_tag() }}
     <button
         class="btn btn-primary"
         id="logout"
