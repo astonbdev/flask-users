@@ -3,7 +3,7 @@ import os
 from flask import Flask, render_template, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User, Note
-from forms import CSRFProtectForm, RegisterUserForm, LoginUserForm
+from forms import CSRFProtectForm, RegisterUserForm, LoginUserForm, NoteForm
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///hashing_login"
@@ -78,10 +78,15 @@ def show_user(username):
     """displays user information"""
 
     form = CSRFProtectForm()
+    noteCSRFForm = CSRFProtectForm()
     user = User.query.get_or_404(username)
 
     if session.get("username") == username:
-        return render_template("user.html", user=user, form=form)
+        return render_template(
+            "user.html",
+            user=user,
+            form=form,
+            noteCSRF=noteCSRFForm)
     else:
         return redirect('/login')
 
@@ -93,3 +98,44 @@ def logout_user():
     session.pop("username", None)
 
     return redirect('/login')
+
+
+@app.route('/users/<username>/notes/add', methods=["GET", "POST"])
+def add_user_note(username):
+
+    form = NoteForm()
+
+    user = User.query.get_or_404(username)
+
+    if form.validate_on_submit():
+        title = form.title.data
+        content = form.content.data
+
+        note = Note(title=title, content=content)
+
+        user.notes.append(note)
+
+        db.session.commit()
+
+        return redirect(f'/users/{username}')
+
+    return render_template("add_note.html", username=user.username, form=form)
+
+
+@app.route('/notes/<int:note_id>/update', methods=["GET", "POST"])
+def update_user_note(note_id):
+
+    note = Note.query.get_or_404(note_id)
+
+    form = NoteForm(obj=note)
+
+    if form.validate_on_submit():
+        note.title = form.title.data
+        note.content = form.content.data
+
+        db.session.commit()
+
+        return redirect(f'/users/{note.owner}')
+
+    return render_template("update_note.html", form=form, note=note)
+

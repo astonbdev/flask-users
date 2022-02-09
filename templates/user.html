@@ -7,21 +7,37 @@
 <p>{{ user.email }}</p>
 
 <h2>Notes</h2>
-    <ul>
-        {% for note in user.notes %}
-        <li maxlength="100">
-            <p><b>{{ note.title }}</b>{{ note.content }}</p> 
-            <button formaction="/notes/{{ note.id }}/update">Update Note</button>
-            <button formaction="/notes/{{ note.id }}/delete" method="POST">Delete Note</button>
-        </li>
-        {% endfor %}
-    </ul>
+    <form id="note-form">
+        {{ noteCSRF.hidden_tag() }}
+        <ul>
+            {% for note in user.notes %}
+            <li maxlength="100">
+                <p><b>{{ note.title }}</b>: {{ note.content }}</p>
+                    <button class="btn btn-dark" formaction="/notes/{{ note.id }}/update">Update Note</button>
+                    <button class="btn btn-dark" formaction="/notes/{{ note.id }}/delete" method="POST">Delete Note</button>
+            </li>
+            <br>
+            {% endfor %}
+        </ul>
+        <button class= "btn btn-primary" id="add-note" formaction="/users/{{user.username}}/notes/add">Add Note</button>
+    </form>
+    <br>
+    <br>
+    <br>
 
-<form  id="logout-form" action="/logout" method="POST">
+<form id="user-action-form" method="POST">
     {{ form.hidden_tag() }}
     <button
+        formaction="/logout"
         class="btn btn-primary"
         id="logout"
         type="submit">Logout</button>
+
+    <button
+        formaction="/users/{{ user.username }}/delete"
+        class="btn btn-dangerous"
+        id="delete-user"
+        type="submit">Delete User</button>
+
 </form>
 {% endblock %}

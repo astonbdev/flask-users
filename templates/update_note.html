@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form action="">
+<form action="/notes/{{ note.id }}/update" method="POST">
     {{ form.hidden_tag() }}
     {% for field in form if field.widget.input_type != 'hidden' %}
     <div class="mb-3">
@@ -22,7 +22,7 @@
         </span>
     </div>
     {% endfor %}
-    <button id="update-note-form" type="submit">Update Note!</button>
+    <button class="btn btn-primary" id="update-note-form" type="submit">Update Note</button>
 
 
 </form>
