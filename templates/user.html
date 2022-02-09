@@ -14,7 +14,9 @@
             <li maxlength="100">
                 <p><b>{{ note.title }}</b>: {{ note.content }}</p>
                     <button class="btn btn-dark" formaction="/notes/{{ note.id }}/update">Update Note</button>
-                    <button class="btn btn-dark" formaction="/notes/{{ note.id }}/delete" method="POST">Delete Note</button>
+                    <!-- <form action="/notes/{{ note.id }}/delete" method="POST"> -->
+                        <button class="btn btn-dark" formaction="/notes/{{ note.id }}/delete" formmethod="POST">Delete Note</button>
+                    <!-- </form> -->
             </li>
             <br>
             {% endfor %}

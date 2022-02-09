@@ -102,7 +102,9 @@ def logout_user():
 
 @app.route('/users/<username>/notes/add', methods=["GET", "POST"])
 def add_user_note(username):
-
+    """Add notes to the user if the data is valid and redirect to user detail
+    page, or it still show the add note form
+    """
     form = NoteForm()
 
     user = User.query.get_or_404(username)
@@ -124,7 +126,9 @@ def add_user_note(username):
 
 @app.route('/notes/<int:note_id>/update', methods=["GET", "POST"])
 def update_user_note(note_id):
-
+    """update user note and after click the update button, redirect to user
+    page
+    """
     note = Note.query.get_or_404(note_id)
 
     form = NoteForm(obj=note)
@@ -139,3 +143,32 @@ def update_user_note(note_id):
 
     return render_template("update_note.html", form=form, note=note)
 
+
+@app.post('/notes/<int:note_id>/delete')
+def delete_note(note_id):
+    """delete the note of given note id, and redirect to user page"""
+    note = Note.query.get_or_404(note_id)
+    username = note.owner
+    db.session.delete(note)
+    db.session.commit()
+    return redirect(f'/users/{username}')
+
+
+@app.post('/users/<username>/delete')
+def delete_user(username):
+    """delete the user and the user notes, and remove the user from the session,
+    redirect to homepage"""
+    user = User.query.get_or_404(username)
+
+    if user.notes:
+        Note.query.filter(Note.owner == username).delete()
+        # db.session.delete(notes)
+        db.session.delete(user)
+    else:
+        db.session.delete(user)
+
+    db.session.commit()
+
+    session.pop("username", None)
+
+    return redirect('/')
